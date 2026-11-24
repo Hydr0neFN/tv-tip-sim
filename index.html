@@ -7,7 +7,7 @@
 <style>
   *{box-sizing:border-box}
   body{overflow-x:hidden;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;margin:0;background:#f4f2ee;color:#222}
-  .wrap{max-width:1200px;margin:auto;padding:16px}
+  .wrap{max-width:1240px;margin:auto;padding:16px}
   h1{font-size:24px;margin:4px 0 4px}
   .sub{color:#666;margin:0 0 14px}
   .bar{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:flex-end;background:#fff;border-radius:12px;padding:14px 18px;box-shadow:0 1px 4px #0002}
@@ -22,15 +22,17 @@
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(360px,100%),1fr));gap:14px;margin-top:14px}
   .card{background:#fff;border-radius:12px;box-shadow:0 1px 4px #0002;overflow:hidden;border:3px solid transparent;transition:border-color .3s}
   .card.bad{border-color:#e74c3c}.card.warn{border-color:#f39c12}.card.ok{border-color:#27ae60}
-  .head{display:flex;justify-content:space-between;align-items:center;padding:10px 14px 0}
-  .title{font-size:18px;font-weight:700}
-  .badge{font-size:16px;font-weight:700;padding:4px 12px;border-radius:20px;background:#eee;color:#777}
+  .head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:10px 14px 0}
+  .title{font-size:17px;font-weight:700}
+  .badge{flex:none;font-size:15px;font-weight:700;padding:4px 12px;border-radius:20px;background:#eee;color:#777}
   .badge.bad{background:#fdecea;color:#c0392b}.badge.warn{background:#fef5e7;color:#b9770e}.badge.ok{background:#eafaf1;color:#1e8449}
   canvas{display:block;width:100%;height:auto}
+  .read{padding:2px 14px 6px;font-size:15px;color:#555}
+  .read b{color:#c0392b}
   .cap{padding:0 14px 12px;font-size:15px;line-height:1.6;color:#333}
   .legend{display:flex;flex-wrap:wrap;gap:18px;font-size:14px;color:#444;margin:12px 4px}
   .legend i{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:5px}
-  .why{background:#fff;border-radius:12px;padding:14px 20px;box-shadow:0 1px 4px #0002;margin-top:6px;font-size:16px;line-height:1.8}
+  .why{background:#fff;border-radius:12px;padding:14px 20px;box-shadow:0 1px 4px #0002;margin-top:14px;font-size:16px;line-height:1.8}
   .why h2{font-size:19px;margin:0 0 6px}
   .why b{color:#c0392b}
   .fine{color:#888;font-size:13px}
@@ -38,10 +40,18 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>地震時電視會不會倒？三種放法一起搖給你看</h1>
-  <p class="sub">選好地震大小，按「開始搖」。三台電視會同時搖，框框變紅就是倒了。</p>
+  <h1>地震時電視會不會倒？六種放法一起搖給你看</h1>
+  <p class="sub">選好電視尺寸和地震大小，按「開始搖」。六台電視會同時搖，框框變紅就是倒了。</p>
 
   <div class="bar">
+    <div><label>電視尺寸</label>
+      <select id="size">
+        <option value="43">43 吋</option>
+        <option value="50">50 吋</option>
+        <option value="55" selected>55 吋</option>
+        <option value="65">65 吋</option>
+        <option value="75">75 吋</option>
+      </select></div>
     <div><label>地震多大（地面震度）</label>
       <select id="pga">
         <option value="0.11">5 弱</option>
@@ -56,7 +66,7 @@
         <option value="1.5" selected>5 樓以上（搖得比較大）</option>
         <option value="2">很高的樓層</option>
       </select></div>
-    <div><label>墊的板子</label>
+    <div><label>方式 2、3 墊的板子</label>
       <select id="k">
         <option value="0.2" selected>薄塑膠板（容易彎）</option>
         <option value="0.5">厚塑膠板／薄木板</option>
@@ -64,21 +74,24 @@
       </select></div>
     <div><button id="go">▶ 開始搖</button></div>
     <details>
-      <summary>進階設定（電視尺寸、地震週期）</summary>
+      <summary>進階設定（選尺寸會自動帶入，也可以自己改）</summary>
       <div class="adv">
+        <div>電視腳座前後深度：<b id="fV"></b> cm<input type="range" id="f" min="15" max="40" step="1" value="24"></div>
+        <div>電視重心高度（放在原廠腳座上）：<b id="hV"></b> cm<input type="range" id="h" min="25" max="70" step="1" value="41"></div>
         <div>板子前後深度：<b id="DV"></b> cm<input type="range" id="D" min="25" max="50" step="1" value="45"></div>
-        <div>電視腳座前後深度：<b id="fV"></b> cm<input type="range" id="f" min="15" max="35" step="1" value="24"></div>
-        <div>電視重心高度：<b id="hV"></b> cm<input type="range" id="h" min="30" max="60" step="1" value="40"></div>
+        <div>立柱底座前後深度：<b id="sdV"></b> cm<input type="range" id="sd" min="18" max="35" step="1" value="23"></div>
         <div>搖晃週期：<b id="TV"></b> 秒<input type="range" id="T" min="0.3" max="1.2" step="0.05" value="0.5"></div>
       </div>
     </details>
   </div>
 
   <div class="legend">
-    <span><i style="background:#e74c3c"></i>重心</span>
-    <span><i style="background:#fff;border:3px solid #e74c3c"></i>翻倒時的支點（電視繞著這點倒下）</span>
+    <span><i style="background:#e74c3c"></i>重心（整組）</span>
+    <span><i style="background:#fff;border:3px solid #e74c3c"></i>翻倒時的支點（繞著這點倒下）</span>
     <span><i style="background:#7fb3d5;border-radius:2px"></i>墊的板子</span>
     <span><i style="background:#e67e22;border-radius:2px"></i>拉繩</span>
+    <span><i style="background:#7f8c8d;border-radius:2px"></i>立柱腳架</span>
+    <span><i style="background:#d9bf98;border-radius:2px"></i>系統櫃</span>
     <span>左邊靠牆，右邊是客廳</span>
   </div>
 
@@ -87,155 +100,186 @@
   <div class="why">
     <h2>為什麼會這樣？</h2>
     重心離支點越遠、重心越低，電視就越難翻。電視多重都一樣，<b>重量不影響會不會翻</b>。<br>
-    家人的方案把電視和板子綁成一組，支點從腳座邊緣移到板子邊緣，所以<b>有幫助</b>。<br>
-    可是整組沒有抓住櫃子：<b>板子一彎，支點就縮回來</b>；搖得夠大，整組還是一起倒，或一起滑出去。<br>
-    板子越硬、越深（前後越長），效果越好。用 18mm 厚木板、盡量做到跟櫃子一樣深，是不鑽孔的情況下最好的做法。
-    <p class="fine">模擬方式：剛體搖擺模型＋正弦地震波，沒有算「整組滑動」。數字是示意，實際還跟腳座形狀、摩擦、地震波形有關。</p>
+    家人的方案把電視和板子綁成一組，支點從腳座邊緣移到板子邊緣，所以<b>有幫助</b>。可是<b>板子一彎，支點就縮回來</b>。<br>
+    立柱腳架左右很寬，但會倒的是<b>前後方向</b>。電視掛在立柱前面，重心往客廳偏，往前倒的支點反而變近。放低可以把重心降下來，效果有，但不大。<br>
+    最穩的不鑽孔做法：<b>立柱腳架用螺絲鎖在自己的 18mm 木板上</b>，木板盡量做到跟櫃子一樣深。鑽的是自己的木板，不是櫃子。
+    <p class="fine">模擬方式：剛體搖擺模型＋正弦地震波，沒有算「整組滑動」。估計值：電視重量 43 吋 8 kg～75 吋 30 kg；立柱底座 6 kg；電視重心在立柱前方 5 cm；放到最低比一般高度低 8 cm；18mm 木板 5 kg。數字是示意，實際請量你們的電視和腳架。搖擺本身很混亂，兩個差不多的方式，結果可能剛好相反；比較時請看卡片下方「開始翹起來」的數字，越大越穩。</p>
   </div>
 </div>
 
 <script id="sim">
 const G = 9.81;
 function env(t){ return t<1 ? t : t<5 ? 1 : t<7 ? (7-t)/2 : 0; }
-// b, h in meters; A in g
-function simulate(b, h, A, T, rec){
-  const R = Math.hypot(b,h), al = Math.atan(b/h), p2 = 3*G/(4*R);
-  const r = 1 - 1.5*Math.sin(al)**2, dt = 0.0002, dur = 9;
+// bL = rear (wall side) pivot distance, bR = front (living room) pivot distance, h = CoM height; meters; A in g
+function simulate(bL, bR, h, A, T, rec){
+  const geo = b => ({al: Math.atan(b/h), p2: 3*G/(4*Math.hypot(b,h))});
+  const GL = geo(bL), GR = geo(bR);
+  const r = 1 - 1.5*Math.sin((GL.al+GR.al)/2)**2, dt = 0.0002, dur = 9;
   let th = 0, w = 0, peak = 0, fallen = false; const frames = [];
   const per = Math.round(1/60/dt);
   for (let i=0, t=0; t<dur; i++, t+=dt){
     const a = A*G*Math.sin(2*Math.PI*t/T)*env(t);
     if (rec && i%per===0) frames.push([t, th, a]);
     if (fallen) continue;
-    if (th===0 && w===0 && Math.abs(a) <= G*Math.tan(al)) continue;
+    if (th===0 && w===0){
+      const g0 = a>0 ? GL : GR;
+      if (Math.abs(a) <= G*Math.tan(g0.al)) continue;
+    }
     const s = th!==0 ? Math.sign(th) : (w!==0 ? Math.sign(w) : -Math.sign(a));
-    const acc = -p2*(Math.sin(s*al - th) + (a/G)*Math.cos(s*al - th));
+    const g = s>0 ? GR : GL;
+    const acc = -g.p2*(Math.sin(s*g.al - th) + (a/G)*Math.cos(s*g.al - th));
     w += acc*dt;
     let nt = th + w*dt;
     if (th===0 && Math.sign(nt)!==s) { nt = 0; w = 0; }
     else if (th!==0 && Math.sign(nt)!==Math.sign(th)) { nt = 0; w *= r; if (Math.abs(w)<1e-3) w = 0; }
     th = nt;
-    peak = Math.max(peak, Math.abs(th)/al);
+    peak = Math.max(peak, Math.abs(th)/g.al);
     if (Math.abs(th) > 1.5) { th = 1.5*Math.sign(th); fallen = true; }
   }
-  return {fallen, peak, frames, al};
+  return {fallen, peak, frames};
 }
 if (typeof module !== 'undefined') module.exports = {simulate};
 </script>
 <script>
 const $ = id => document.getElementById(id);
-const W = 560, H = 400, BASEY = 330;          // canvas size, cabinet top y
-const TH = 1.5, FOOT = 2, PANEL = 68, PDEP = 6;
+const W = 560, H = 390, BASEY = 350;
+const TH = 1.8, FOOT = 2, PDEP = 6, SB = 1.5;          // board, foot, panel depth, stand base thickness (cm)
+const MB = 6, MBD = 5, OFF = 5, LOW = 8;                // stand base kg, wood board kg, TV ahead of pole, lowered cm
+const SIZES = { // inch: [mass kg, foot depth cm, CoM height on own feet cm]
+  43:[8,20,33], 50:[11,22,38], 55:[15,24,41], 65:[22,28,47], 75:[30,32,53] };
 const SCENES = [
   {t:'1. 直接放（現況）', cap:'電視從自己的腳座邊緣翻倒。'},
   {t:'2. 墊板子，但電視沒固定在板子上', cap:'板子留在原地，電視照樣從腳座邊緣翻。板子沒幫到。'},
   {t:'3. 墊板子＋拉繩（家人方案）', cap:'電視和板子綁成一組，支點移到板子邊緣。板子越軟越容易彎，支點就縮回來。'},
+  {t:'4. 立柱腳架（一般高度）', cap:'電視掛在立柱前面，重心往客廳偏。往前倒的支點只剩幾公分。'},
+  {t:'5. 立柱腳架（放到最低）', cap:'重心變低，比一般高度好一點。往前倒的支點還是很近。'},
+  {t:'6. 立柱腳架鎖在 18mm 木板上', cap:'底座用螺絲鎖在自己的木板上（不鑽櫃子）。支點移到木板邊緣，最穩。'},
 ];
-const VERD = {bad:'倒了', warn:'晃了，沒倒', ok:'穩穩的', idle:'等待中'};
+const VERD = {bad:'倒了', warn:'晃了，沒倒', ok:'穩穩的', idle:'等待中', run:'搖晃中…'};
 
-const grid = $('grid');
 const cards = SCENES.map((sc,i)=>{
   const d = document.createElement('div'); d.className='card';
   d.innerHTML = `<div class="head"><span class="title">${sc.t}</span><span class="badge">${VERD.idle}</span></div>
-    <canvas width="${W}" height="${H}"></canvas><div class="cap">${sc.cap}</div>`;
-  grid.appendChild(d);
-  return {el:d, badge:d.querySelector('.badge'), cx:d.querySelector('canvas').getContext('2d'), m:i};
+    <canvas width="${W}" height="${H}"></canvas><div class="read"></div><div class="cap">${sc.cap}</div>`;
+  $('grid').appendChild(d);
+  return {el:d, read:d.querySelector('.read'), badge:d.querySelector('.badge'), cx:d.querySelector('canvas').getContext('2d'), m:i};
 });
 
 function params(){
-  return {k:+$('k').value, A:+$('pga').value*+$('amp').value, T:+$('T').value,
-          D:+$('D').value, fb:+$('f').value/2, h:+$('h').value};
+  const size = +$('size').value;
+  return {size, MT:SIZES[size][0], panel:size*2.54*0.49, k:+$('k').value,
+          A:+$('pga').value*+$('amp').value, T:+$('T').value, D:+$('D').value,
+          fb:+$('f').value/2, h:+$('h').value, sb:+$('sd').value/2};
 }
-function bFor(m, P){
-  if (m===2) return P.fb + (Math.max(P.D/2,P.fb) - P.fb)*P.k;
-  return P.fb;
+// geometry per scene: bL/bR pivot distances from system CoM, hs CoM height above pivot surface,
+// yp pivot surface height, plus drawing info
+function geom(m, P){
+  if (m<=2){
+    const b = m===2 ? P.fb + (Math.max(P.D/2,P.fb) - P.fb)*P.k : P.fb;
+    return {bL:b, bR:b, hs:P.h, yp:m===0?0:TH, y0:m===0?0:TH, htv:P.h};
+  }
+  const htv = m===3 ? P.h : Math.max(P.panel/2 + 4, P.h - LOW);  // TV CoM above base top
+  const yb = m===5 ? TH : 0;                                       // base bottom
+  const off = P.MT*OFF/(P.MT+MB+(m===5?MBD:0));                     // pole is this far behind system CoM
+  if (m===5){
+    const hs = (P.MT*(TH+SB+htv) + MB*(TH+SB/2) + MBD*TH/2)/(P.MT+MB+MBD);
+    const b = P.sb + (P.D/2 - P.sb)*0.9;
+    return {bL:b, bR:b, hs, yp:0, y0:yb, htv, xc:-off};
+  }
+  const hs = (P.MT*(SB+htv) + MB*SB/2)/(P.MT+MB);
+  return {bL:P.sb+off, bR:P.sb-off, hs, yp:0, y0:0, htv, xc:-off};
 }
 function kind(res){
-  if (!res) return 'ok';
   if (res.fallen) return 'bad';
   return res.peak > 0.02 ? 'warn' : 'ok';
 }
 function setBadge(c, k){
-  c.badge.className = 'badge' + (k==='idle'?'':' '+k); c.badge.textContent = VERD[k];
-  c.el.className = 'card' + (k==='idle'?'':' '+k);
+  c.badge.className = 'badge' + (k==='idle'||k==='run'?'':' '+k); c.badge.textContent = VERD[k];
+  c.el.className = 'card' + (k==='idle'||k==='run'?'':' '+k);
 }
 
 const rect = (x0,y0,x1,y1) => [[x0,y0],[x1,y0],[x1,y1],[x0,y1]];
 function rot(p, pv, phi){ const c=Math.cos(phi), s=Math.sin(phi), x=p[0]-pv[0], y=p[1]-pv[1];
   return [pv[0]+x*c-y*s, pv[1]+x*s+y*c]; }
-
 function tag(cx, text, x, y, color, align){
-  cx.font = "bold 18px \"Microsoft JhengHei\",sans-serif";
+  cx.font = 'bold 18px "Microsoft JhengHei",sans-serif';
   const w = cx.measureText(text).width + 14, h = 26;
   const X = align==='right' ? x - w : x;
   cx.fillStyle = 'rgba(255,255,255,.92)'; cx.strokeStyle = color; cx.lineWidth = 1.5;
   cx.beginPath(); cx.roundRect(X, y - h/2, w, h, 6); cx.fill(); cx.stroke();
-  cx.fillStyle = color; cx.textBaseline = 'middle'; cx.fillText(text, X + 6, y + 1);
+  cx.fillStyle = color; cx.textBaseline = 'middle'; cx.fillText(text, X + 7, y + 1);
   cx.textBaseline = 'alphabetic';
 }
 
-function draw(c, P, th, shiftPx, t, a){
-  const cx = c.cx, m = c.m;
-  const top = TH + FOOT + Math.max(3, P.h - PANEL/2) + PANEL;
-  const S = Math.min(4.2, (BASEY - 30) / top);     // px per cm, keeps TV inside
+function draw(c, P, th, shiftPx){
+  const cx = c.cx, m = c.m, g = geom(m, P);
+  const topH = Math.max(P.h, g.htv + SB + TH) + P.panel/2 + 4;
+  const S = Math.min(4.2, (BASEY - 30) / topH);
   const OX = W/2 + 20 + shiftPx;
   const P2 = p => [OX + p[0]*S, BASEY - p[1]*S];
-  const fillPoly = (pts, fill, stroke) => {
+  const poly = (pts, fill, stroke) => {
     cx.beginPath(); pts.forEach((p,i)=>{ const [X,Y]=P2(p); i?cx.lineTo(X,Y):cx.moveTo(X,Y); });
     cx.closePath(); if(fill){cx.fillStyle=fill;cx.fill();} if(stroke){cx.strokeStyle=stroke;cx.lineWidth=1.5;cx.stroke();}
   };
   cx.clearRect(0,0,W,H);
-  // cabinet
-  const cabHalf = 30;
-  fillPoly(rect(-cabHalf, -(BASEY - 0)/S, cabHalf, 0), '#d9bf98', '#8a6d45');
-  cx.fillStyle='#7a5d35'; cx.font='14px "Microsoft JhengHei",sans-serif';
-  cx.textAlign='center'; cx.fillText('系統櫃', OX, BASEY + 40); cx.textAlign='left';
+  poly(rect(-30, -BASEY/S, 30, 0), '#d9bf98', '#8a6d45');
 
-  const b = bFor(m,P);
   const s = th===0 ? 1 : Math.sign(th);
-  const y0 = m===0 ? 0 : TH;
-  const piv = [s*(b===null?0:b), y0];
+  const piv = [s>0 ? g.bR : -g.bL, g.yp];
   const R = p => th===0 ? p : rot(p, piv, -th);
   const Rs = pts => pts.map(R);
+  const BOARD = ['#7fb3d5', '#2e6f9e'], WOOD = ['#c49a6c', '#7a5230'];
 
-  // board
-  if (m>=1){
-    if (m===2 && th!==0){
-      const px = piv[0];
-      fillPoly(s>0 ? rect(px,0,P.D/2,TH) : rect(-P.D/2,0,px,TH), '#7fb3d5', '#2e6f9e');
-      fillPoly(Rs(s>0 ? rect(-P.D/2,0,px,TH) : rect(px,0,P.D/2,TH)), '#7fb3d5', '#2e6f9e');
-    } else fillPoly(rect(-P.D/2,0,P.D/2,TH), '#7fb3d5', '#2e6f9e');
-  }
-  // TV
-  const pb = Math.max(3, P.h - PANEL/2);
-  fillPoly(Rs(rect(-P.fb, y0, P.fb, y0+FOOT)), '#555');
-  fillPoly(Rs(rect(-1.5, y0+FOOT, 1.5, y0+pb+5)), '#666');
-  fillPoly(Rs(rect(-PDEP/2, y0+pb, PDEP/2, y0+pb+PANEL)), '#222', '#000');
-
-  // strap
+  // boards
+  if (m===1) poly(rect(-P.D/2,0,P.D/2,TH), ...BOARD);
   if (m===2){
-    const p1 = P2(R([-PDEP/2, y0+pb+22])), p2 = P2(R([-P.D/2+3, TH]));
-    cx.strokeStyle='#e67e22'; cx.lineWidth=3.5;
-    cx.beginPath(); cx.moveTo(...p1); cx.lineTo(...p2); cx.stroke();
-    tag(cx, '拉繩', Math.min(p1[0],p2[0]) - 8, (p1[1]+p2[1])/2, '#e67e22', 'right');
+    if (th!==0){
+      const px = piv[0];
+      poly(s>0 ? rect(px,0,P.D/2,TH) : rect(-P.D/2,0,px,TH), ...BOARD);
+      poly(Rs(s>0 ? rect(-P.D/2,0,px,TH) : rect(px,0,P.D/2,TH)), ...BOARD);
+    } else poly(rect(-P.D/2,0,P.D/2,TH), ...BOARD);
   }
-  // CoM and pivots
-  const c0 = P2(R([0, y0+P.h]));
-  if (b!==null){
-    cx.setLineDash([6,5]); cx.strokeStyle='rgba(231,76,60,.6)'; cx.lineWidth=1.5;
-    const pts = th===0 ? [[-b,y0],[b,y0]] : [R([-s*b,y0]), piv];
-    pts.forEach(pv=>{ const q=P2(pv); cx.beginPath(); cx.moveTo(...c0); cx.lineTo(...q); cx.stroke(); });
-    cx.setLineDash([]);
-    pts.forEach(pv=>{ const q=P2(pv); cx.beginPath(); cx.arc(q[0], q[1], 6, 0, 7);
-      cx.fillStyle='#fff'; cx.fill(); cx.strokeStyle='#e74c3c'; cx.lineWidth=3; cx.stroke(); });
+  if (m===5) poly(Rs(rect(-P.D/2,0,P.D/2,TH)), ...WOOD);
+
+  if (m<=2){
+    // TV on its own feet
+    const y0 = g.y0, pb = Math.max(3, P.h - P.panel/2);
+    poly(Rs(rect(-P.fb, y0, P.fb, y0+FOOT)), '#555');
+    poly(Rs(rect(-1.5, y0+FOOT, 1.5, y0+pb+5)), '#666');
+    poly(Rs(rect(-PDEP/2, y0+pb, PDEP/2, y0+pb+P.panel)), '#222', '#000');
+    if (m===2){
+      const p1 = P2(R([-PDEP/2, y0+pb+P.panel*0.3])), p2 = P2(R([-P.D/2+3, TH]));
+      cx.strokeStyle='#e67e22'; cx.lineWidth=3.5;
+      cx.beginPath(); cx.moveTo(...p1); cx.lineTo(...p2); cx.stroke();
+      tag(cx, '拉繩', Math.min(p1[0],p2[0]) - 8, (p1[1]+p2[1])/2, '#e67e22', 'right');
+    }
+  } else {
+    // pedestal stand: base, pole, TV in front of pole
+    const y0 = g.y0, xc = g.xc, cy = y0 + SB + g.htv, pb = cy - P.panel/2;
+    poly(Rs(rect(xc-P.sb, y0, xc+P.sb, y0+SB)), '#7f8c8d', '#4d5656');
+    poly(Rs(rect(xc-2.5, y0+SB, xc+0.5, cy+8)), '#95a5a6', '#4d5656');
+    poly(Rs(rect(xc+0.5, cy-10, xc+2, cy+10)), '#4d5656');
+    poly(Rs(rect(xc+2, pb, xc+2+PDEP, pb+P.panel)), '#222', '#000');
+    if (m===5){
+      cx.strokeStyle='#333'; cx.lineWidth=2.5;
+      [xc-P.sb+2, xc+P.sb-2].forEach(x=>{ const a=P2(R([x,y0+SB+1])), b=P2(R([x,0.2]));
+        cx.beginPath(); cx.moveTo(...a); cx.lineTo(...b); cx.stroke(); });
+      const q = P2(R([P.D/2, 0])); tag(cx, '螺絲只鎖進木板', q[0]-4, q[1]+24, '#333', 'right');
+    }
   }
+  // CoM + pivots
+  const c0 = P2(R([0, g.yp + g.hs]));
+  const pts = th===0 ? [[-g.bL,g.yp],[g.bR,g.yp]] : [R([s>0?-g.bL:g.bR, g.yp]), piv];
+  cx.setLineDash([6,5]); cx.strokeStyle='rgba(231,76,60,.6)'; cx.lineWidth=1.5;
+  pts.forEach(pv=>{ const q=P2(pv); cx.beginPath(); cx.moveTo(...c0); cx.lineTo(...q); cx.stroke(); });
+  cx.setLineDash([]);
+  pts.forEach(pv=>{ const q=P2(pv); cx.beginPath(); cx.arc(q[0], q[1], 6, 0, 7);
+    cx.fillStyle='#fff'; cx.fill(); cx.strokeStyle='#e74c3c'; cx.lineWidth=3; cx.stroke(); });
   cx.beginPath(); cx.arc(c0[0], c0[1], 8, 0, 7); cx.fillStyle='#e74c3c'; cx.fill();
   cx.strokeStyle='#fff'; cx.lineWidth=2; cx.stroke();
-  tag(cx, '重心', c0[0] + 16, c0[1], '#e74c3c');
-
-  // footer
-  cx.fillStyle='#555'; cx.font='14px "Microsoft JhengHei",sans-serif';
-  cx.fillText(`${t.toFixed(1)} 秒`, 12, H - 12);
+  tag(cx, '重心', c0[0] + 18, c0[1], '#e74c3c');
+  // front pivot distance readout
+  if (th===0) c.read.innerHTML = `往前支點 ${g.bR.toFixed(1)} cm｜樓層搖到約 <b>${(g.bR/g.hs).toFixed(2)}g</b> 開始翹起來`;
 }
 
 let anim = null;
@@ -243,16 +287,15 @@ function run(){
   const P = params();
   if (anim) cancelAnimationFrame(anim);
   const w = 2*Math.PI/P.T;
-  const res = cards.map(c=>{ const b=bFor(c.m,P); return b===null?null:simulate(b/100, P.h/100, P.A, P.T, true); });
+  const res = cards.map(c=>{ const g = geom(c.m,P); return simulate(g.bL/100, g.bR/100, g.hs/100, P.A, P.T, true); });
   const base = res[0].frames;
-  cards.forEach(c=>setBadge(c,'idle'));
-  cards.forEach(c=>c.badge.textContent='搖晃中…');
+  cards.forEach(c=>setBadge(c,'run'));
   const t0 = performance.now();
   const step = () => {
     const i = Math.min(base.length-1, Math.floor((performance.now()-t0)/1000*60));
-    const [t, , a] = base[i];
+    const a = base[i][2];
     const shift = -a/(w*w)*100*3.5*2.5;  // exaggerated for visibility
-    cards.forEach((c,j)=>draw(c, P, res[j] ? res[j].frames[i][1] : 0, shift, t, a));
+    cards.forEach((c,j)=>draw(c, P, res[j].frames[i][1], shift));
     if (i < base.length-1) anim = requestAnimationFrame(step);
     else cards.forEach((c,j)=>setBadge(c, kind(res[j])));
   };
@@ -260,10 +303,12 @@ function run(){
 }
 function refresh(){
   const P = params();
-  $('TV').textContent = P.T.toFixed(2); $('DV').textContent = P.D; $('fV').textContent = P.fb*2; $('hV').textContent = P.h;
+  $('TV').textContent = P.T.toFixed(2); $('DV').textContent = P.D; $('fV').textContent = P.fb*2;
+  $('hV').textContent = P.h; $('sdV').textContent = P.sb*2;
   if (anim) cancelAnimationFrame(anim);
-  cards.forEach(c=>{ setBadge(c,'idle'); draw(c, P, 0, 0, 0, 0); });
+  cards.forEach(c=>{ setBadge(c,'idle'); draw(c, P, 0, 0); });
 }
+$('size').addEventListener('input', ()=>{ const v = SIZES[+$('size').value]; $('f').value = v[1]; $('h').value = v[2]; });
 document.querySelectorAll('select,input').forEach(e=>e.addEventListener('input', refresh));
 $('go').onclick = run;
 refresh();
