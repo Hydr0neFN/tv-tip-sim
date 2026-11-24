@@ -19,7 +19,7 @@
   details summary{cursor:pointer;color:#666}
   .adv{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 24px;margin-top:8px}
   .adv input{width:100%}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(520px,100%),1fr));gap:14px;margin-top:14px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(360px,100%),1fr));gap:14px;margin-top:14px}
   .card{background:#fff;border-radius:12px;box-shadow:0 1px 4px #0002;overflow:hidden;border:3px solid transparent;transition:border-color .3s}
   .card.bad{border-color:#e74c3c}.card.warn{border-color:#f39c12}.card.ok{border-color:#27ae60}
   .head{display:flex;justify-content:space-between;align-items:center;padding:10px 14px 0}
@@ -38,8 +38,8 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>地震時電視會不會倒？四種放法一起搖給你看</h1>
-  <p class="sub">選好地震大小，按「開始搖」。四台電視會同時搖，框框變紅就是倒了。</p>
+  <h1>地震時電視會不會倒？三種放法一起搖給你看</h1>
+  <p class="sub">選好地震大小，按「開始搖」。三台電視會同時搖，框框變紅就是倒了。</p>
 
   <div class="bar">
     <div><label>地震多大（地面震度）</label>
@@ -89,7 +89,7 @@
     重心離支點越遠、重心越低，電視就越難翻。電視多重都一樣，<b>重量不影響會不會翻</b>。<br>
     家人的方案把電視和板子綁成一組，支點從腳座邊緣移到板子邊緣，所以<b>有幫助</b>。<br>
     可是整組沒有抓住櫃子：<b>板子一彎，支點就縮回來</b>；搖得夠大，整組還是一起倒，或一起滑出去。<br>
-    只有把板子<b>鎖在櫃子上</b>，才是真的抓住。螺絲鎖在頂板上面、藏在板子底下，看不到，搬家時補洞就好。
+    板子越硬、越深（前後越長），效果越好。用 18mm 厚木板、盡量做到跟櫃子一樣深，是不鑽孔的情況下最好的做法。
     <p class="fine">模擬方式：剛體搖擺模型＋正弦地震波，沒有算「整組滑動」。數字是示意，實際還跟腳座形狀、摩擦、地震波形有關。</p>
   </div>
 </div>
@@ -130,7 +130,6 @@ const SCENES = [
   {t:'1. 直接放（現況）', cap:'電視從自己的腳座邊緣翻倒。'},
   {t:'2. 墊板子，但電視沒固定在板子上', cap:'板子留在原地，電視照樣從腳座邊緣翻。板子沒幫到。'},
   {t:'3. 墊板子＋拉繩（家人方案）', cap:'電視和板子綁成一組，支點移到板子邊緣。板子越軟越容易彎，支點就縮回來。'},
-  {t:'4. 板子用螺絲鎖進櫃子', cap:'整組被櫃子抓住，不會翻。螺絲藏在板子底下。'},
 ];
 const VERD = {bad:'倒了', warn:'晃了，沒倒', ok:'穩穩的', idle:'等待中'};
 
@@ -148,7 +147,6 @@ function params(){
           D:+$('D').value, fb:+$('f').value/2, h:+$('h').value};
 }
 function bFor(m, P){
-  if (m===3) return null;
   if (m===2) return P.fb + (Math.max(P.D/2,P.fb) - P.fb)*P.k;
   return P.fb;
 }
@@ -207,11 +205,6 @@ function draw(c, P, th, shiftPx, t, a){
       fillPoly(s>0 ? rect(px,0,P.D/2,TH) : rect(-P.D/2,0,px,TH), '#7fb3d5', '#2e6f9e');
       fillPoly(Rs(s>0 ? rect(-P.D/2,0,px,TH) : rect(px,0,P.D/2,TH)), '#7fb3d5', '#2e6f9e');
     } else fillPoly(rect(-P.D/2,0,P.D/2,TH), '#7fb3d5', '#2e6f9e');
-    if (m===3){
-      cx.strokeStyle='#333'; cx.lineWidth=3;
-      [-P.D/2+3, P.D/2-3].forEach(x=>{ const [X,Y]=P2([x,TH]); cx.beginPath(); cx.moveTo(X,Y-4); cx.lineTo(X,Y+22); cx.stroke(); });
-      const [X,Y] = P2([P.D/2-3, 0]); tag(cx, '螺絲鎖進櫃子', X + 10, Y + 22, '#333');
-    }
   }
   // TV
   const pb = Math.max(3, P.h - PANEL/2);
